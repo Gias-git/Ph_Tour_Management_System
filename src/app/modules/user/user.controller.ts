@@ -7,17 +7,29 @@ import { catchAsync } from "../../utils/CatchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 
 
+
 const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = await UserServices.createUser(req.body);
-    // res.status(httpStatus.CREATED).json({
-    //     message: `User Created Successfully`,
-    //     user
-    // })
 
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,
         message: "User Created Successfully",
+        data: user
+    })
+})
+
+
+const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const VerifiedToken = req.user
+    const payload = req.body
+    const user = await UserServices.updateUser(userId, payload, VerifiedToken);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Updated Successfully",
         data: user
     })
 })
@@ -68,7 +80,11 @@ const getAllUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 
 
 
+
+
+
 export const UserControllers = {
     createUser,
-    getAllUser
+    getAllUser,
+    updateUser
 }
